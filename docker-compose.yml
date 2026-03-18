@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: bankruptcy_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bankruptcy
+      POSTGRES_USER: parser
+      POSTGRES_PASSWORD: parser
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U parser -d bankruptcy"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  parser:
+    build: .
+    container_name: bankruptcy_parser
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://parser:parser@db:5432/bankruptcy
+      CONCURRENCY: 3
+      DELAY_BETWEEN: 2.0
+      REQUEST_TIMEOUT: 30
+      MAX_RETRIES: 3
+      LOG_LEVEL: INFO
+      LOG_FILE: /logs/parser.log
+    # Переопределяет CMD из Dockerfile.
+    # ENTRYPOINT (python main.py) остаётся неизменным.
+    # Передать другой файл:
+    #   docker compose run --rm parser --input /data/other.xlsx
+    command: ["--input", "${INPUT_FILE:-/data/inn_list.xlsx}"]
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+    restart: "no"
+
+volumes:
+  postgres_data:

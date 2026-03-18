@@ -1,0 +1,7 @@
+aiohttp==3.11.11
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+openpyxl==3.1.5
+tenacity==8.3.0
+python-dotenv==1.0.1
+beautifulsoup4==4.12.3
