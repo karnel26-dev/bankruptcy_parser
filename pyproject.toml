@@ -2,7 +2,7 @@
 name = "bankruptcy-parser"
 version = "0.1.0"
 description = "Async парсер банкротств с fedresurs.ru и kad.arbitr.ru"
-authors = ["Your Name <you@example.com>"]
+authors = ["alex_dev_26@mil.ru"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

@@ -34,10 +34,6 @@ services:
       MAX_RETRIES: 3
       LOG_LEVEL: INFO
       LOG_FILE: /logs/parser.log
-    # Переопределяет CMD из Dockerfile.
-    # ENTRYPOINT (python main.py) остаётся неизменным.
-    # Передать другой файл:
-    #   docker compose run --rm parser --input /data/other.xlsx
     command: ["--input", "${INPUT_FILE:-/data/inn_list.xlsx}"]
     volumes:
       - ./data:/data
